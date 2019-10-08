@@ -3,7 +3,7 @@
 	url = https://github.com/viktorgino/libheadunit.git
 [submodule "themes/default-theme"]
 	path = themes/default-theme
-	url = https://github.com/viktorgino/headunit-gui.git
+	url = https://github.com/lukfi/headunit-gui.git
 [submodule "doxygen-bootstrapped"]
 	path = doxygen-bootstrapped
 	url = https://github.com/Velron/doxygen-bootstrapped.git
