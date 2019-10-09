@@ -12,7 +12,9 @@ void PluginManager::settingsChanged(QString key, QVariant value){
 bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStringList filterList)
 {
     QDir pluginsDir(qApp->applicationDirPath());
+    QStringList filters;
 #if defined(Q_OS_WIN)
+    filters << "*.dll";
     if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
         pluginsDir.cdUp();
 #elif defined(Q_OS_MAC)
@@ -23,6 +25,8 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
     }
 #endif
     pluginsDir.cd("plugins");
+    pluginsDir.setNameFilters(filters);
+
     //Load plugins
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
 
@@ -80,6 +84,14 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
             engine->rootContext()->setContextProperty(pluginName,contextProperty);
         }
 
+        QString additionalContextName;
+        QObject* additionalContext = pluginObject->getAdditionalProperties(additionalContextName);
+        if (additionalContext)
+        {
+            qDebug() << "Plugin:" << pluginName << "has additional context:" << additionalContextName;
+            engine->rootContext()->setContextProperty(additionalContextName, additionalContext);
+        }
+
         QQuickImageProvider *imageProvider = pluginObject->getImageProvider();
         if(imageProvider && metaData.contains("imageProvider")){
             engine->addImageProvider(metaData.value("imageProvider").toString(),imageProvider);
@@ -109,12 +121,12 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
             settingsItems.append(settingsObject.toVariantMap());
         }
         pluginLoaders<< &pluginLoader;
-	pluginObject->onLoad();
+        pluginObject->onLoad();
     }
     //Load QML plugins
     pluginsDir.cd("qml");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-	qDebug() << "Loading qml plugin: " << fileName;
+    qDebug() << "Loading qml plugin: " << fileName;
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QJsonValue uri = pluginLoader.metaData().value("MetaData").toObject().value("uri");
         QList<QQmlError> errors;
@@ -148,8 +160,8 @@ void PluginManager::messageReceived(QString id, QString message){
     }
 }
 void PluginManager::loadMenuItems(QQmlApplicationEngine *engine){
-    menuItems << QJsonObject {{"source","qrc:/qml/ClimateControl/CCLayout.qml"},{"image","icons/svg/thermometer.svg"},{"text","A/C"},{"color","#f44336"}}.toVariantMap()
-              << QJsonObject {{"source","qrc:/qml/Radio/RadioLayout.qml"},{"image","icons/svg/radio-waves.svg"},{"text","Radio"},{"color","#E91E63"}}.toVariantMap()
+    menuItems //<< QJsonObject {{"source","qrc:/qml/ClimateControl/CCLayout.qml"},{"image","icons/svg/thermometer.svg"},{"text","A/C"},{"color","#f44336"}}.toVariantMap()
+              //<< QJsonObject {{"source","qrc:/qml/Radio/RadioLayout.qml"},{"image","icons/svg/radio-waves.svg"},{"text","Radio"},{"color","#E91E63"}}.toVariantMap()
               << QJsonObject {{"source","qrc:/qml/SettingsPage/SettingsPage.qml"},{"image","icons/svg/gear-a.svg"},{"text","Settings"},{"color","#4CAF50"}}.toVariantMap();
     engine->rootContext()->setContextProperty("menuItems", menuItems);
 }

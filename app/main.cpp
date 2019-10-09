@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
     parser.addVersionOption();
     
     QCommandLineOption pluginsOption(QStringList() << "p" << "plugins",
-	QCoreApplication::translate("main", "Plugins to enable (defaults to all)"),
-	QCoreApplication::translate("main", "plugins")
+    QCoreApplication::translate("main", "Plugins to enable (defaults to all)"),
+    QCoreApplication::translate("main", "plugins")
     );
     parser.addOption(pluginsOption);
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     bool whitelist = parser.isSet(pluginsOption);
     QStringList plugins;
     if (whitelist) {
-	    plugins = p.split(" ",QString::SkipEmptyParts);
+        plugins = p.split(" ",QString::SkipEmptyParts);
     }
 
     PluginManager pluginManager(engine, whitelist, plugins);
@@ -64,7 +64,5 @@ int main(int argc, char *argv[])
 
     int ret = app.exec();
 
-    delete &pluginManager;
-    delete &themeManager;
     return ret;
 }

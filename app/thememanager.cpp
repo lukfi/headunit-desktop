@@ -5,7 +5,11 @@ Q_LOGGING_CATEGORY(THEMEMANAGER, "Theme Manager")
 ThemeManager::ThemeManager(QQmlApplicationEngine *engine, QObject *parent) : QObject(parent),
     m_engine(engine)
 {
-    QString fileName = "themes/default-theme/libdefault-theme.so";
+#if defined(Q_OS_WIN)
+    QString fileName = "themes/default-theme/default-themed.dll";
+#else
+    QString fileName = "themes/default-theme/default-themed.so";
+#endif
     QPluginLoader themeLoader(fileName);
 
     QQmlExtensionPlugin * theme = static_cast<QQmlExtensionPlugin *>(themeLoader.instance());

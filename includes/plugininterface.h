@@ -12,11 +12,12 @@ class PluginInterface
     Q_PROPERTY(QQmlPropertyMap *Settings MEMBER settings CONSTANT)
 public:
     virtual QObject *getContextProperty() = 0;
+    virtual QObject *getAdditionalProperties(QString &name) { return nullptr; }
     virtual QQuickImageProvider *getImageProvider() = 0;
     virtual QStringList eventListeners() = 0;
     virtual QStringList events() = 0;
     virtual QStringList actions() = 0;
-    virtual ~PluginInterface() = 0;
+    virtual ~PluginInterface() {}//= 0;
     virtual void onLoad() {};
     QQmlPropertyMap settings;
 public slots:
