@@ -17,3 +17,6 @@
 [submodule "modules/navit/navit"]
 	path = modules/navit/navit
 	url = https://github.com/viktorgino/navit
+[submodule "modules/hup_media-player"]
+	path = modules/hup_media-player
+	url = https://github.com/lukfi/hup_media-player.git

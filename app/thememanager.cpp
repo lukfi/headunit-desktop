@@ -8,7 +8,7 @@ ThemeManager::ThemeManager(QQmlApplicationEngine *engine, QObject *parent) : QOb
 #if defined(Q_OS_WIN)
     QString fileName = "themes/default-theme/default-themed.dll";
 #else
-    QString fileName = "themes/default-theme/default-themed.so";
+    QString fileName = "themes/default-theme/libdefault-theme.so";
 #endif
     QPluginLoader themeLoader(fileName);
 
