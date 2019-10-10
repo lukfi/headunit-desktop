@@ -28,9 +28,11 @@ QML_IMPORT_PATH = $${OUT_PWD}
 target.path = $$PREFIX/
 
 pluginfiles.files += \
-    $${PWD}/../qml_gui/qml/theme/*
+    $${PWD}/../themes/default-theme
 
-pluginfiles.path = $$PREFIX/HUDTheme
+pluginfiles.path = $$pluginfiles.files/HUDTheme
+
+message($${pluginfiles.path})
 
 theme.files += \
     $${PWD}/theme.json
