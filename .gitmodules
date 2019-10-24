@@ -7,10 +7,6 @@
 [submodule "doxygen-bootstrapped"]
 	path = doxygen-bootstrapped
 	url = https://github.com/Velron/doxygen-bootstrapped.git
-[submodule "welle.io"]
-	path = modules/welle-io/welle.io
-	url = https://github.com/AlbrechtL/welle.io
-	branch = master
 [submodule "modules/volume-control/qml/plasma-pa"]
 	path = modules/volume-control/qml/plasma-pa
 	url = https://github.com/KDE/plasma-pa.git
@@ -20,3 +16,8 @@
 [submodule "modules/hup_media-player"]
 	path = modules/hup_media-player
 	url = https://github.com/lukfi/hup_media-player.git
+	branch = master
+[submodule "modules/welle.io"]
+	path = modules/welle.io
+	url = https://github.com/lukfi/welle.io.git
+	branch = lf_delevop
