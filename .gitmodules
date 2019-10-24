@@ -21,3 +21,6 @@
 	path = modules/welle.io
 	url = https://github.com/lukfi/welle.io.git
 	branch = lf_delevop
+[submodule "modules/hup_radio"]
+	path = modules/hup_radio
+	url = https://github.com/lukfi/hup_radio.git
