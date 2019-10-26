@@ -24,3 +24,7 @@
 [submodule "modules/hup_radio"]
 	path = modules/hup_radio
 	url = https://github.com/lukfi/hup_radio.git
+[submodule "modules/hup_volume-control"]
+	path = modules/hup_volume-control
+	url = https://github.com/lukfi/hup_volume-control.git
+	branch = master
