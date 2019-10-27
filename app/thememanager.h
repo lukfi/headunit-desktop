@@ -37,7 +37,8 @@ private:
     QVariantList HUDStyleSettings;
     QList<SettingsLoader *>m_settings;
 signals:
-    void themeEvent(QString event, QString eventData);
+    void themeEvent(QString event, QString eventData); // communicaiton to themePlugin
+    void pluginEvent(QString event, QString eventData); // event from plugin
 public slots:
     void onEvent(QString event, QString eventData);
 };

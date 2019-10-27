@@ -36,6 +36,10 @@ ThemeManager::ThemeManager(QQmlApplicationEngine *engine, QObject *parent) : QOb
             qDebug() << "Has onEvent";
             connect(this, SIGNAL(themeEvent(QString, QString)), themePlugin, SLOT(onEvent(QString, QString)));
         }
+        if(pluginMeta->method(i).methodSignature() == "eventRaised(QString,QString)"){
+            qDebug() << "Has signal eventRaised";
+            connect(themePlugin, SIGNAL(eventRaised(QString, QString)), this, SIGNAL(pluginEvent(QString, QString)));
+        }
     }
 
     QJsonObject themeSettings = themeLoader.metaData().value("MetaData").toObject();

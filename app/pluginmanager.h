@@ -25,10 +25,11 @@ public:
     explicit PluginManager(QQmlApplicationEngine *engine, bool filter, QStringList filterList, QObject *parent = nullptr);
     ~PluginManager();
 signals:
-    void themeEvent(QString, QString);
+    void themeEvent(QString, QString); // event for GUI (theme)
 public slots:
+    void onEvent(QString event, QString eventData); // communication from GUI (theme)
 private slots:
-    void messageReceived(QString id, QString message);
+    void messageReceived(QString id, QString message); // communication from plugin
 private:
     bool loadPlugins(QQmlApplicationEngine *engine, bool filter, QStringList filterList);
     QVariantList menuItems;

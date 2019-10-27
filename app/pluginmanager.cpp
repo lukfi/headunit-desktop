@@ -235,3 +235,8 @@ PluginManager::~PluginManager(){
 #endif
 
 }
+
+void PluginManager::onEvent(QString event, QString eventData)
+{
+    qDebug() << "PluginManager::onEvent" << event << eventData;
+}

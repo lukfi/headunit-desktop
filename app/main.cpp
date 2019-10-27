@@ -56,11 +56,10 @@ int main(int argc, char *argv[])
     }
 
     PluginManager pluginManager(engine, whitelist, plugins);
-
     ThemeManager themeManager(engine);
 
     QObject::connect(&pluginManager, &PluginManager::themeEvent, &themeManager, &ThemeManager::onEvent);
-
+    QObject::connect(&themeManager, &ThemeManager::pluginEvent, &pluginManager, &PluginManager::onEvent);
 
     int ret = app.exec();
 
