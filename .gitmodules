@@ -28,3 +28,6 @@
 	path = modules/hup_volume-control
 	url = https://github.com/lukfi/hup_volume-control.git
 	branch = master
+[submodule "modules/hup_canbus"]
+	path = modules/hup_canbus
+	url = https://github.com/lukfi/hup_canbus.git
