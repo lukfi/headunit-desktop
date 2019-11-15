@@ -31,3 +31,6 @@
 [submodule "modules/hup_canbus"]
 	path = modules/hup_canbus
 	url = https://github.com/lukfi/hup_canbus.git
+[submodule "modules/hup_buttons"]
+	path = modules/hup_buttons
+	url = https://github.com/lukfi/hup_buttons.git
