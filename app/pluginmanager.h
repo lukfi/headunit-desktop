@@ -34,7 +34,7 @@ private:
     bool loadPlugins(QQmlApplicationEngine *engine, bool filter, QStringList filterList);
     QVariantList menuItems;
     QVariantList configItems;
-    QMap<QString, PluginInterface *> plugins;
+    QMap<QString, PluginInterface*> plugins;
     QMap<QString, QJsonObject> pluginConfigs;
     QList<QPluginLoader *>pluginLoaders;
     QList<SettingsLoader *>pluginSettings;

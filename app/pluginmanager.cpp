@@ -30,8 +30,8 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
     pluginsDir.setNameFilters(filters);
 
     //Load plugins
-    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files))
+    {
         QString fileBaseName=fileName.section(".",0,0);
         if (filter && !filterList.contains(fileBaseName,Qt::CaseInsensitive)) {
             qDebug() << "Plugin not whitelisted (disabled): " << fileBaseName;
@@ -83,6 +83,7 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
 
         QObject * contextProperty = pluginObject->getContextProperty();
         if(contextProperty){
+            qCDebug(PLUGINMANAGER) << "Adding ContextProperty: " << pluginName;
             engine->rootContext()->setContextProperty(pluginName,contextProperty);
         }
 
@@ -125,10 +126,11 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
         pluginLoaders<< &pluginLoader;
         pluginObject->onLoad();
     }
+
     //Load QML plugins
     pluginsDir.cd("qml");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-    qDebug() << "Loading qml plugin: " << fileName;
+        qDebug() << "Loading qml plugin: " << fileName;
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QJsonValue uri = pluginLoader.metaData().value("MetaData").toObject().value("uri");
         QList<QQmlError> errors;
@@ -240,7 +242,24 @@ PluginManager::~PluginManager(){
 
 }
 
-void PluginManager::onEvent(QString event, QString eventData)
+void PluginManager::onEvent(QString event, QString eventData) // communication from GUI (theme)
 {
-    qDebug() << "PluginManager::onEvent" << event << eventData;
+    if (event == "KEY")
+    {
+        PluginInterface* volPlugin = nullptr;
+        auto volIter = plugins.find("VolumeControl");
+        if (volIter != plugins.end())
+        {
+            volPlugin = *volIter;
+            volPlugin->eventMessage(event, eventData);
+            if (eventData == QString::number(Qt::Key_Plus))
+            {
+                qDebug() << "VOL +";
+            }
+            else if (eventData == QString::number(Qt::Key_Minus))
+            {
+                qDebug() << "VOL -";
+            }
+        }
+    }
 }
