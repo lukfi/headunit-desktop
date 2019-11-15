@@ -23,6 +23,8 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
         pluginsDir.cdUp();
         pluginsDir.cdUp();
     }
+#elif defined(Q_OS_UNIX)
+    filters << "*.so";
 #endif
     pluginsDir.cd("plugins");
     pluginsDir.setNameFilters(filters);
@@ -143,7 +145,9 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
     return true;
 }
 
-void PluginManager::messageReceived(QString id, QString message){
+void PluginManager::messageReceived(QString id, QString message)
+{
+    qCDebug(PLUGINMANAGER) << "MSG:" << id << message;
     QStringList messageId = id.split("::");
 
     if(messageId.size() == 2 && messageId[0] == "GUI") {
