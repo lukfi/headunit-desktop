@@ -10,13 +10,15 @@ include("../config.pri")
 SOURCES += main.cpp \
     pluginmanager.cpp \
     settingsloader.cpp \
-    thememanager.cpp
+    thememanager.cpp \
+    systemeventhandler.cpp
 
 HEADERS += \
     ../includes/plugininterface.h \
     pluginmanager.h \
     settingsloader.h \
-    thememanager.h
+    thememanager.h \
+    systemeventhandler.h
 
 rpi {
     DEFINES += RPI
@@ -40,4 +42,7 @@ theme.files += \
 theme.path = $$PREFIX/ 
 
 INSTALLS += target pluginfiles theme
+
+DISTFILES += \
+    SIGNALS
 

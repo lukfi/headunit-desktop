@@ -18,6 +18,8 @@
 #include "../includes/plugininterface.h"
 #include "settingsloader.h"
 
+#include "systemeventhandler.h"
+
 class PluginManager : public QObject
 {
     Q_OBJECT
@@ -36,8 +38,8 @@ private:
     QVariantList configItems;
     QMap<QString, PluginInterface*> plugins;
     QMap<QString, QJsonObject> pluginConfigs;
-    QList<QPluginLoader *>pluginLoaders;
-    QList<SettingsLoader *>pluginSettings;
+    QList<QPluginLoader*>pluginLoaders;
+    QList<SettingsLoader*>pluginSettings;
 
     void settingsChanged(QString key, QVariant value);
 //    QQmlPropertyMap settings;
@@ -50,6 +52,8 @@ private:
     QHash<QString, QStringList> connections;
 
     QStringList m_overlays;
+
+    SystemEventHandler mEventHandler;
 };
 
 #endif // PLUGINMANAGER_H

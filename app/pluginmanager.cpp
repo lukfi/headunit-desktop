@@ -2,7 +2,8 @@
 
 Q_LOGGING_CATEGORY(PLUGINMANAGER, "Plugin Manager")
 
-PluginManager::PluginManager(QQmlApplicationEngine *engine, bool filter, QStringList filterList, QObject *parent) : QObject(parent)
+PluginManager::PluginManager(QQmlApplicationEngine *engine, bool filter, QStringList filterList, QObject *parent) : QObject(parent),
+  mEventHandler(plugins)
 {
     loadPlugins(engine, filter, filterList);
 }
@@ -152,9 +153,23 @@ void PluginManager::messageReceived(QString id, QString message)
     qCDebug(PLUGINMANAGER) << "MSG:" << id << message;
     QStringList messageId = id.split("::");
 
-    if(messageId.size() == 2 && messageId[0] == "GUI") {
-        emit themeEvent(messageId[1], message);
-        return;
+    // message for GUI
+    if (messageId.size() == 2)
+    {
+        if (messageId[0].toLower() == "gui")
+        {
+            emit themeEvent(messageId[1], message);
+            return;
+        }
+        else if (messageId[0].toLower() == "system")
+        {
+            mEventHandler.HandleEvent(messageId[1], message);
+        }
+        else
+        {
+            qCDebug(PLUGINMANAGER) << "Invalid message received from: " << QString(sender()->metaObject()->className());
+            return;
+        }
     }
 
     QString event = QString("%1::%2").arg(QString(sender()->metaObject()->className())).arg(id);
@@ -244,22 +259,5 @@ PluginManager::~PluginManager(){
 
 void PluginManager::onEvent(QString event, QString eventData) // communication from GUI (theme)
 {
-    if (event == "KEY")
-    {
-        PluginInterface* volPlugin = nullptr;
-        auto volIter = plugins.find("VolumeControl");
-        if (volIter != plugins.end())
-        {
-            volPlugin = *volIter;
-            volPlugin->eventMessage(event, eventData);
-            if (eventData == QString::number(Qt::Key_Plus))
-            {
-                qDebug() << "VOL +";
-            }
-            else if (eventData == QString::number(Qt::Key_Minus))
-            {
-                qDebug() << "VOL -";
-            }
-        }
-    }
+    mEventHandler.HandleEvent(event, eventData);
 }
