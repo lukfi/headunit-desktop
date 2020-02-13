@@ -6,7 +6,11 @@ ThemeManager::ThemeManager(QQmlApplicationEngine *engine, QObject *parent) : QOb
     m_engine(engine)
 {
 #if defined(Q_OS_WIN)
-    QString fileName = "themes/default-theme/default-themed.dll";
+    #if defined(QT_DEBUG)
+        QString fileName = "themes/default-theme/default-themed.dll";
+    #else
+        QString fileName = "themes/default-theme/default-theme.dll";
+    #endif
 #else
     QString fileName = "themes/default-theme/libdefault-theme.so";
 #endif

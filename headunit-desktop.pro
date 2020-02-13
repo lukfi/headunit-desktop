@@ -1,17 +1,16 @@
 TEMPLATE = subdirs
 
-SUBDIRS = \
-          app \
-          modules/hup_media-player
-#          modules/volume-control \
-#          modules/phone-bluetooth \
-#          modules/android-auto \
-#          modules/media-player \
-#          modules/odb-car \
-#          modules/usbconnectionlistener \
-#          modules/welle-io \
-#          modules/navit \
-#          modules/sample \
-#          modules/rpi \
-#          themes/default-theme
+SUBDIRS += themes/default-theme
+#SUBDIRS += modules/hup_media-player
+#SUBDIRS += modules/volume-control 
+#SUBDIRS += modules/phone-bluetooth 
+#SUBDIRS += modules/android-auto 
+#SUBDIRS += modules/media-player 
+#SUBDIRS += modules/odb-car 
+#SUBDIRS += modules/usbconnectionlistener 
+#SUBDIRS += modules/welle-io 
+#SUBDIRS += modules/navit 
+#SUBDIRS += modules/sample 
+#SUBDIRS += modules/rpi 
 
+SUBDIRS += app
