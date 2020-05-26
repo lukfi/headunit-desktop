@@ -18,7 +18,7 @@ public:
     virtual QStringList events() = 0;
     virtual QStringList actions() = 0;
     virtual ~PluginInterface() {}//= 0;
-    virtual void onLoad() {};
+    virtual void onLoad() {}
     QQmlPropertyMap settings;
 public slots:
     virtual void eventMessage(QString id, QString message) = 0;

@@ -26,6 +26,7 @@ class ThemeManager : public QObject
 public:
     explicit ThemeManager(QQmlApplicationEngine *engine, QObject *parent = nullptr);
     ~ThemeManager();
+    void IndicateCurrentItem();
 private:
     void loadJson(QString path);
     void processThemeSettings(QJsonObject json);
@@ -36,11 +37,16 @@ private:
     QVariantMap HUDStyle;
     QVariantList HUDStyleSettings;
     QList<SettingsLoader *>m_settings;
+    struct {
+        QString event;
+        QString data;
+    } mCurrentItem;
 signals:
     void themeEvent(QString event, QString eventData); // communicaiton to themePlugin
     void pluginEvent(QString event, QString eventData); // event from plugin
 public slots:
     void onEvent(QString event, QString eventData);
+    void onThemeEvent(QString, QString);
 };
 
 #endif // THEMEMANAGER_H

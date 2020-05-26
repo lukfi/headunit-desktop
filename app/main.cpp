@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(&pluginManager, &PluginManager::themeEvent, &themeManager, &ThemeManager::onEvent);
     QObject::connect(&themeManager, &ThemeManager::pluginEvent, &pluginManager, &PluginManager::onEvent);
+    themeManager.IndicateCurrentItem();
 
     int ret = app.exec();
 

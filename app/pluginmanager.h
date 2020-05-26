@@ -34,9 +34,9 @@ private slots:
     void messageReceived(QString id, QString message); // communication from plugin
 private:
     bool loadPlugins(QQmlApplicationEngine *engine, bool filter, QStringList filterList);
-    QVariantList menuItems;
+    QVariantList mMenuItems;
     QVariantList configItems;
-    QMap<QString, PluginInterface*> plugins;
+    QMap<QString, PluginInterface*> mPlugins;
     QMap<QString, QJsonObject> pluginConfigs;
     QList<QPluginLoader*>pluginLoaders;
     QList<SettingsLoader*>pluginSettings;

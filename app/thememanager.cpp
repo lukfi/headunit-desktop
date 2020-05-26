@@ -37,12 +37,12 @@ ThemeManager::ThemeManager(QQmlApplicationEngine *engine, QObject *parent) : QOb
     QStringList methods;
     for(int i = pluginMeta->methodOffset(); i < pluginMeta->methodCount(); ++i){
         if(pluginMeta->method(i).methodSignature() == "onEvent(QString,QString)"){
-            qDebug() << "Has onEvent";
+            qCDebug(THEMEMANAGER) << "Has onEvent";
             connect(this, SIGNAL(themeEvent(QString, QString)), themePlugin, SLOT(onEvent(QString, QString)));
         }
         if(pluginMeta->method(i).methodSignature() == "eventRaised(QString,QString)"){
-            qDebug() << "Has signal eventRaised";
-            connect(themePlugin, SIGNAL(eventRaised(QString, QString)), this, SIGNAL(pluginEvent(QString, QString)));
+            qCDebug(THEMEMANAGER) << "Has signal eventRaised";
+            connect(themePlugin, SIGNAL(eventRaised(QString, QString)), this, SLOT(onThemeEvent(QString, QString)));
         }
     }
 
@@ -56,6 +56,16 @@ ThemeManager::ThemeManager(QQmlApplicationEngine *engine, QObject *parent) : QOb
 
 void ThemeManager::onEvent(QString event, QString eventData) {
     emit themeEvent(event, eventData);
+}
+
+void ThemeManager::onThemeEvent(QString event, QString data)
+{
+    if (event.toLower() == "current")
+    {
+        mCurrentItem.event = event;;
+        mCurrentItem.data = data;
+        emit pluginEvent(event, data);
+    }
 }
 
 void ThemeManager::loadJson(QString path){
@@ -162,4 +172,12 @@ ThemeManager::~ThemeManager(){
         delete(settings);
     }
     qDebug() << "Theme manager dead";
+}
+
+void ThemeManager::IndicateCurrentItem()
+{
+    if (mCurrentItem.event.toLower() == "current")
+    {
+        emit pluginEvent(mCurrentItem.event, mCurrentItem.data);
+    }
 }

@@ -3,7 +3,7 @@
 Q_LOGGING_CATEGORY(PLUGINMANAGER, "Plugin Manager")
 
 PluginManager::PluginManager(QQmlApplicationEngine *engine, bool filter, QStringList filterList, QObject *parent) : QObject(parent),
-  mEventHandler(plugins)
+  mEventHandler(mPlugins)
 {
     loadPlugins(engine, filter, filterList);
 }
@@ -80,7 +80,7 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
             }
         }
 
-        plugins.insert(pluginMeta->className(), pluginObject);
+        mPlugins.insert(pluginMeta->className(), pluginObject);
 
         QObject * contextProperty = pluginObject->getContextProperty();
         if(contextProperty){
@@ -92,18 +92,22 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
         QObject* additionalContext = pluginObject->getAdditionalProperties(additionalContextName);
         if (additionalContext)
         {
-            qDebug() << "Plugin:" << pluginName << "has additional context:" << additionalContextName;
+            qCDebug(PLUGINMANAGER) << "Plugin:" << pluginName << "has additional context:" << additionalContextName;
             engine->rootContext()->setContextProperty(additionalContextName, additionalContext);
         }
 
         QQuickImageProvider *imageProvider = pluginObject->getImageProvider();
-        if(imageProvider && metaData.contains("imageProvider")){
+        if(imageProvider && metaData.contains("imageProvider"))
+        {
+            qCDebug(PLUGINMANAGER) << "Plugin:" << pluginName << "has imageProvider:" << metaData.value("imageProvider").toString();
             engine->addImageProvider(metaData.value("imageProvider").toString(),imageProvider);
         }
 
         QJsonValue menu = metaData.value("menu");
         if(menu.type() == QJsonValue::Object){
-            menuItems << menu.toObject().toVariantMap();
+            QVariantMap variantMap = menu.toObject().toVariantMap();
+            variantMap["pluginname"] = pluginMeta->className();
+            mMenuItems << variantMap;
         }
 
         QJsonValue overlay = metaData.value("overlay");
@@ -131,7 +135,7 @@ bool PluginManager::loadPlugins(QQmlApplicationEngine *engine, bool filter, QStr
     //Load QML plugins
     pluginsDir.cd("qml");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        qDebug() << "Loading qml plugin: " << fileName;
+        qCDebug(PLUGINMANAGER) << "Loading qml plugin: " << fileName;
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QJsonValue uri = pluginLoader.metaData().value("MetaData").toObject().value("uri");
         QList<QQmlError> errors;
@@ -176,15 +180,15 @@ void PluginManager::messageReceived(QString id, QString message)
     if(connections.contains(event)){
         QStringList listeners = connections.value(event);
         for(QString listener : listeners){
-            plugins[listener]->eventMessage(event, message);
+            mPlugins[listener]->eventMessage(event, message);
         }
     }
 }
 void PluginManager::loadMenuItems(QQmlApplicationEngine *engine){
-    menuItems //<< QJsonObject {{"source","qrc:/qml/ClimateControl/CCLayout.qml"},{"image","icons/svg/thermometer.svg"},{"text","A/C"},{"color","#f44336"}}.toVariantMap()
+    mMenuItems //<< QJsonObject {{"source","qrc:/qml/ClimateControl/CCLayout.qml"},{"image","icons/svg/thermometer.svg"},{"text","A/C"},{"color","#f44336"}}.toVariantMap()
               //<< QJsonObject {{"source","qrc:/qml/Radio/RadioLayout.qml"},{"image","icons/svg/radio-waves.svg"},{"text","Radio"},{"color","#E91E63"}}.toVariantMap()
-              << QJsonObject {{"source","qrc:/qml/SettingsPage/SettingsPage.qml"},{"image","icons/svg/gear-a.svg"},{"text","Settings"},{"color","#4CAF50"}}.toVariantMap();
-    engine->rootContext()->setContextProperty("menuItems", menuItems);
+              << QJsonObject {{"source","qrc:/qml/SettingsPage/SettingsPage.qml"},{"image","icons/svg/gear-a.svg"},{"text","Settings"},{"color","#4CAF50"},{"pluginname","Settings"}}.toVariantMap();
+    engine->rootContext()->setContextProperty("menuItems", mMenuItems);
 }
 
 void PluginManager::loadConfigItems(QQmlApplicationEngine *engine){
@@ -243,7 +247,7 @@ PluginManager::~PluginManager(){
 //    for (PluginInterface * plugin : plugins) {
 //        delete(plugin);
 //    }
-    qDeleteAll(plugins);
+    qDeleteAll(mPlugins);
 
     for(SettingsLoader * settings : pluginSettings){
         delete(settings);

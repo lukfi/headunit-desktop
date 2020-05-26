@@ -42,6 +42,13 @@ void SystemEventHandler::HandleKeyPress(QString key)
             qDebug() << "VOL -";
         }
     }
+    else
+    {
+        for (auto p: mPlugins)
+        {
+            p->eventMessage("KEY", key);
+        }
+    }
 }
 
 void SystemEventHandler::HandleButtonPress(QString btn)
@@ -69,5 +76,19 @@ void SystemEventHandler::HandleButtonPress(QString btn)
 
 void SystemEventHandler::HandlePluginMessage(QString event, QString eventData)
 {
-
+    //qDebug() << "HandlePluginMessage:" << event << eventData;
+    if (event.toLower() == "current")
+    {
+        for (auto p = mPlugins.begin(); p != mPlugins.end(); ++p)
+        {
+            if (p.key() == eventData)
+            {
+                p.value()->eventMessage("CURRENT", "TRUE");
+            }
+            else
+            {
+                p.value()->eventMessage("CURRENT", "FALSE");
+            }
+        }
+    }
 }
